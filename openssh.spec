@@ -93,8 +93,14 @@ BuildRequires: openssl-devel >= 1.0.1
 BuildRequires: openssl-devel < 1.1
 %endif # rhel == 7
 %endif # fedora >= 26
+%if 0%{?rhel} == 6
+BuildRequires: /bin/login
+%else
 BuildRequires: /usr/bin/login
+%endif
 BuildRequires: glibc-devel
+BuildRequires: glibc-devel
+BuildRequires: pam
 BuildRequires: pam-devel
 %if 0%{?rhel} == 6
 BuildRequires: /usr/include/security/pam_appl.h
@@ -414,10 +420,11 @@ fi
 * Fri Apr 19 2019 Nico Kadel-Garcia <nkadel@gmail.com> - 8.0p1-0
 - Update to 8.0p1
 
-* Wed Feb  6 2019 Nico Kadel-Garcia <nkadel@gmail.com>
+* Wed Feb 16 2019 Nico Kadel-Garcia <nkadel@gmail.com>
 - Require /usr/bin/login for for RHEL cross-compatibility.
 - Set epoch on for openssl requirements.
 - Change build6x to specific RHEL version requirements.
+- Discard pam_appl.h direct file dependency
 
 * Sat Feb 10 2018 Darren Tucker <dtucker@dtucker.net>
 - Update openssl-devel dependency to match current requirements.
@@ -470,7 +477,7 @@ fi
   work anyway (3.1 requires OpenSSL 0.9.6 to build), but what the heck
 - require pam-devel by file (not by package name) again
 - add Markus patch to compile with OpenSSL 0.9.5a (from
-  http://bugzilla.mindrot.org/show_bug.cgi?id=141) and apply it if we're
+  http://bugzilla.mindrot.org/show_bug.cgi?id=141) and apply it if we are
   building for 6.x
 
 * Thu Mar  7 2002 Nalin Dahyabhai <nalin@redhat.com> 3.1p1-0
@@ -664,7 +671,7 @@ fi
   script now.
 
 * Tue Feb 13 2001 Nalin Dahyabhai <nalin@redhat.com>
-- Do not open a PAM session until we've forked and become the user (#25690).
+- Do not open a PAM session until we have forked and become the user (#25690).
 - Apply Andrew Bartlett patch for letting pam_authenticate() know which
   host the user is attempting a login from.
 - Resync with parts of Damien Miller openssh.spec from CVS.
@@ -707,7 +714,7 @@ fi
   doing keyboard-interactive authentication.
 
 * Sun Nov 26 2000 Nalin Dahyabhai <nalin@redhat.com>
-- Disable the built-in MD5 password support.  We're using PAM.
+- Disable the built-in MD5 password support.  We are using PAM.
 - Take a crack at doing keyboard-interactive authentication with PAM, and
   enable use of it in the default client configuration so that the client
   will try it when the server disallows password authentication.

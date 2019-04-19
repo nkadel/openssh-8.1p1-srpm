@@ -5,8 +5,11 @@
 # Assure that sorting is case sensitive
 LANG=C
 
+MOCKS+=fedora-rawhide-x86_64
 MOCKS+=fedora-29-x86_64
+MOCKS+=fedora-28-x86_64
 MOCKS+=epel-7-x86_64
+MOCKS+=epel-6-x86_64
 
 SPEC := `ls *.spec`
 
