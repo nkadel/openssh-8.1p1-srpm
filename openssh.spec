@@ -1,4 +1,4 @@
-%global ver 8.0p1
+%global ver 8.1p1
 %global rel 0%{?dist}
 
 # OpenSSH privilege separation requires a user & group ID
@@ -82,28 +82,14 @@ PreReq: initscripts >= 5.00
 Requires: initscripts >= 5.20
 %endif
 BuildRequires: perl
-%if 0%{?fedora}
-BuildRequires: compat-openssl10-devel
-%else
-%if 0%{?rhel} == 7
-BuildRequires: openssl-devel >= 1:1.0.1
-BuildRequires: openssl-devel < 1:1.1
-%else
-BuildRequires: openssl-devel >= 1.0.1
-BuildRequires: openssl-devel < 1.1
-%endif # rhel == 7
-%endif # fedora
-%if 0%{?rhel} == 6
-BuildRequires: /bin/login
-%else
+BuildRequires: openssl-devel
 BuildRequires: /usr/bin/login
-%endif
 BuildRequires: glibc-devel
-BuildRequires: pam
-BuildRequires: pam-devel
-%if 0%{?rhel} == 6
+Buildrequires: pam
+Buildrequires: pam-devel
+%if 0%{?rhel} >= 6
 BuildRequires: /usr/include/security/pam_appl.h
-%endif # rhel == 6
+%endif # rhel >= 6
 %if ! %{no_x11_askpass}
 BuildRequires: /usr/include/X11/Xlib.h
 # Xt development tools
@@ -416,14 +402,17 @@ fi
 %endif
 
 %changelog
+* Wed Oct 9 2019 Nico Kadel-Garcia <nkadel@gmail.com> - 8.1p1-0
+- Update to 8.1p1
+- Discard openssl version specific requirements
+
 * Fri Apr 19 2019 Nico Kadel-Garcia <nkadel@gmail.com> - 8.0p1-0
 - Update to 8.0p1
 
-* Wed Feb 16 2019 Nico Kadel-Garcia <nkadel@gmail.com>
+* Wed Feb  6 2019 Nico Kadel-Garcia <nkadel@gmail.com>
 - Require /usr/bin/login for for RHEL cross-compatibility.
 - Set epoch on for openssl requirements.
 - Change build6x to specific RHEL version requirements.
-- Discard pam_appl.h direct file dependency
 
 * Sat Feb 10 2018 Darren Tucker <dtucker@dtucker.net>
 - Update openssl-devel dependency to match current requirements.
@@ -487,7 +476,7 @@ fi
 - drop debug patch, fixed upstream
 
 * Wed Feb 20 2002 Nalin Dahyabhai <nalin@redhat.com> SNAP-20020220
-- update to SNAP-20020220 for testing purposes (you've been warned, if there's
+- update to SNAP-20020220 for testing purposes (you have been warned, if there is
   anything to be warned about, gss patches wo not apply, I do not mind)
 
 * Wed Feb 13 2002 Nalin Dahyabhai <nalin@redhat.com> 3.0.2p1-3
@@ -670,7 +659,7 @@ fi
   script now.
 
 * Tue Feb 13 2001 Nalin Dahyabhai <nalin@redhat.com>
-- Do not open a PAM session until we have forked and become the user (#25690).
+- Do not open a PAM session until we've forked and become the user (#25690).
 - Apply Andrew Bartlett patch for letting pam_authenticate() know which
   host the user is attempting a login from.
 - Resync with parts of Damien Miller openssh.spec from CVS.
@@ -713,7 +702,7 @@ fi
   doing keyboard-interactive authentication.
 
 * Sun Nov 26 2000 Nalin Dahyabhai <nalin@redhat.com>
-- Disable the built-in MD5 password support.  We are using PAM.
+- Disable the built-in MD5 password support.  We're using PAM.
 - Take a crack at doing keyboard-interactive authentication with PAM, and
   enable use of it in the default client configuration so that the client
   will try it when the server disallows password authentication.
