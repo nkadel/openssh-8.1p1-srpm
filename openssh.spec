@@ -82,7 +82,7 @@ PreReq: initscripts >= 5.00
 Requires: initscripts >= 5.20
 %endif
 BuildRequires: perl
-%if 0%{?fedora} >= 26
+%if 0%{?fedora}
 BuildRequires: compat-openssl10-devel
 %else
 %if 0%{?rhel} == 7
@@ -92,7 +92,7 @@ BuildRequires: openssl-devel < 1:1.1
 BuildRequires: openssl-devel >= 1.0.1
 BuildRequires: openssl-devel < 1.1
 %endif # rhel == 7
-%endif # fedora >= 26
+%endif # fedora
 %if 0%{?rhel} == 6
 BuildRequires: /bin/login
 %else
