@@ -99,7 +99,6 @@ BuildRequires: /bin/login
 BuildRequires: /usr/bin/login
 %endif
 BuildRequires: glibc-devel
-BuildRequires: glibc-devel
 BuildRequires: pam
 BuildRequires: pam-devel
 %if 0%{?rhel} == 6
