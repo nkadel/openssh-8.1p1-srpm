@@ -1,5 +1,5 @@
-%global ver 7.9p1
-%global rel 1%{?dist}
+%global ver 8.0p1
+%global rel 0%{?dist}
 
 # OpenSSH privilege separation requires a user & group ID
 %global sshd_uid    74
@@ -94,10 +94,11 @@ BuildRequires: openssl-devel < 1.1
 %endif # rhel == 7
 %endif # fedora >= 26
 BuildRequires: /usr/bin/login
-BuildRequires: glibc-devel, pam
-%if 0%{?rhel} >= 6
+BuildRequires: glibc-devel
+BuildRequires: pam-devel
+%if 0%{?rhel} == 6
 BuildRequires: /usr/include/security/pam_appl.h
-%endif # rhel >= 6
+%endif # rhel == 6
 %if ! %{no_x11_askpass}
 BuildRequires: /usr/include/X11/Xlib.h
 # Xt development tools
@@ -147,7 +148,7 @@ rsh, and to provide secure encrypted communications between two
 untrusted hosts over an insecure network. X11 connections and
 arbitrary TCP/IP ports can also be forwarded over the secure channel.
 
-OpenSSH is OpenBSD's version of the last free version of SSH, bringing
+OpenSSH is OpenBSD version of the last free version of SSH, bringing
 it up to date in terms of security and features, as well as removing
 all patented algorithms to separate libraries.
 
@@ -159,7 +160,7 @@ install openssh-clients, openssh-server, or both.
 OpenSSH is a free version of SSH (Secure SHell), a program for logging
 into and executing commands on a remote machine. This package includes
 the clients necessary to make encrypted connections to SSH servers.
-You'll also need to install the openssh package on OpenSSH clients.
+You will also need to install the openssh package on OpenSSH clients.
 
 %description server
 OpenSSH is a free version of SSH (Secure SHell), a program for logging
@@ -231,7 +232,7 @@ popd
 %endif
 
 # Define a variable to toggle gnome1/gtk2 building.  This is necessary
-# because RPM doesn't handle nested %if statements.
+# because RPM does not handle nested %if statements.
 %if %{gtk2}
 	gtk2=yes
 %else
@@ -303,7 +304,7 @@ gawk	'BEGIN {IGNORECASE=1}
 	 /^hostkey/ || /^hostdsakey/ {sawhostkey = sawhostkey + 1}
 	 END {exit sawhostkey}' /etc/ssh/sshd_config
 # And if we only found one, we know the client was relying on the old default
-# behavior, which loaded the the SSH2 DSA host key when HostDsaKey wasn't
+# behavior, which loaded the the SSH2 DSA host key when HostDsaKey was not
 # specified.  Now that HostKey is used for both SSH1 and SSH2 keys, specifying
 # one nullifies the default, which would have loaded both.
 if [ $? -eq 1 ] ; then
@@ -410,7 +411,10 @@ fi
 %endif
 
 %changelog
-* Sat Feb  6 2019 Nico Kadel-Garcia <nkadel@gmail.com>
+* Fri Apr 19 2019 Nico Kadel-Garcia <nkadel@gmail.com> - 8.0p1-0
+- Update to 8.0p1
+
+* Wed Feb  6 2019 Nico Kadel-Garcia <nkadel@gmail.com>
 - Require /usr/bin/login for for RHEL cross-compatibility.
 - Set epoch on for openssl requirements.
 - Change build6x to specific RHEL version requirements.
@@ -419,7 +423,7 @@ fi
 - Update openssl-devel dependency to match current requirements.
 - Handle Fedora >=6 openssl 1.0 compat libs.
 - Remove SSH1 from description.
-- Don't strip binaries at build time so that debuginfo package can be
+- Do not strip binaries at build time so that debuginfo package can be
   created.
 
 * Sun Nov 16 2014 Nico Kadel-Garcia <nakdel@gmail.com>
@@ -439,7 +443,7 @@ fi
   file using new AddressFamily directive
 
 * Mon May 12 2003 Damien Miller <djm@mindrot.org>
-- Don't install profile.d scripts when not building with GNOME/GTK askpass
+- Do not install profile.d scripts when not building with GNOME/GTK askpass
   (patch from bet@rahul.net)
 
 * Tue Oct 01 2002 Damien Miller <djm@mindrot.org>
@@ -462,10 +466,10 @@ fi
 
 * Thu Mar  7 2002 Nalin Dahyabhai <nalin@redhat.com> 3.1p1-1
 - require sharutils for building (mindrot #137)
-- require db1-devel only when building for 6.x (#55105), which probably won't
+- require db1-devel only when building for 6.x (#55105), which probably wo not
   work anyway (3.1 requires OpenSSL 0.9.6 to build), but what the heck
 - require pam-devel by file (not by package name) again
-- add Markus's patch to compile with OpenSSL 0.9.5a (from
+- add Markus patch to compile with OpenSSL 0.9.5a (from
   http://bugzilla.mindrot.org/show_bug.cgi?id=141) and apply it if we're
   building for 6.x
 
@@ -478,7 +482,7 @@ fi
 
 * Wed Feb 20 2002 Nalin Dahyabhai <nalin@redhat.com> SNAP-20020220
 - update to SNAP-20020220 for testing purposes (you've been warned, if there's
-  anything to be warned about, gss patches won't apply, I don't mind)
+  anything to be warned about, gss patches wo not apply, I do not mind)
 
 * Wed Feb 13 2002 Nalin Dahyabhai <nalin@redhat.com> 3.0.2p1-3
 - add patches from Simon Wilkinson and Nicolas Williams for GSSAPI key
@@ -512,19 +516,19 @@ fi
 - replace primes with moduli
 
 * Thu Sep 27 2001 Nalin Dahyabhai <nalin@redhat.com> 2.9p2-9
-- incorporate fix from Markus Friedl's advisory for IP-based authorization bugs
+- incorporate fix from Markus Friedl advisory for IP-based authorization bugs
 
 * Thu Sep 13 2001 Bernhard Rosenkraenzer <bero@redhat.com> 2.9p2-8
 - Merge changes to rescue build from current sysadmin survival cd
 
 * Thu Sep  6 2001 Nalin Dahyabhai <nalin@redhat.com> 2.9p2-7
-- fix scp's server's reporting of file sizes, and build with the proper
+- fix scp server reporting of file sizes, and build with the proper
   preprocessor define to get large-file capable open(), stat(), etc.
   (sftp has been doing this correctly all along) (#51827)
 - configure without --with-ipv4-default on RHL 7.x and newer (#45987,#52247)
 - pull cvs patch to fix support for /etc/nologin for non-PAM logins (#47298)
 - mark profile.d scriptlets as config files (#42337)
-- refer to Jason Stone's mail for zsh workaround for exit-hanging quasi-bug
+- refer to Jason Stone mail for zsh workaround for exit-hanging quasi-bug
 - change a couple of log() statements to debug() statements (#50751)
 - pull cvs patch to add -t flag to sshd (#28611)
 - clear fd_sets correctly (one bit per FD, not one byte per FD) (#43221)
@@ -538,11 +542,11 @@ fi
 * Thu Aug  9 2001 Nalin Dahyabhai <nalin@redhat.com>
 - pull cvs patch to add session initialization to no-pty sessions
 - pull cvs patch to not cut off challengeresponse auth needlessly
-- refuse to do X11 forwarding if xauth isn't there, handy if you enable
-  it by default on a system that doesn't have X installed (#49263)
+- refuse to do X11 forwarding if xauth is not there, handy if you enable
+  it by default on a system that does not have X installed (#49263)
 
 * Wed Aug  8 2001 Nalin Dahyabhai <nalin@redhat.com>
-- don't apply patches to code we don't intend to build (spotted by Matt Galgoci)
+- do not apply patches to code we do not intend to build (spotted by Matt Galgoci)
 
 * Mon Aug  6 2001 Nalin Dahyabhai <nalin@redhat.com>
 - pass OPTIONS correctly to initlog (#50151)
@@ -562,10 +566,10 @@ fi
 
 * Thu Jun  7 2001 Nalin Dahyabhai <nalin@redhat.com>
 - change Copyright: BSD to License: BSD
-- add Markus Friedl's unverified patch for the cookie file deletion problem
+- add Markus Friedl unverified patch for the cookie file deletion problem
   so that we can verify it
 - drop patch to check if xauth is present (was folded into cookie patch)
-- don't apply gssapi patches for the errata candidate
+- do not apply gssapi patches for the errata candidate
 - clear supplemental groups list at startup
 
 * Fri May 25 2001 Nalin Dahyabhai <nalin@redhat.com>
@@ -574,8 +578,8 @@ fi
   dealing with comments right
 
 * Thu May 24 2001 Nalin Dahyabhai <nalin@redhat.com>
-- add in Simon Wilkinson's GSSAPI patch to give it some testing in-house,
-  to be removed before the next beta cycle because it's a big departure
+- add in Simon Wilkinson GSSAPI patch to give it some testing in-house,
+  to be removed before the next beta cycle because it a big departure
   from the upstream version
 
 * Thu May  3 2001 Nalin Dahyabhai <nalin@redhat.com>
@@ -583,8 +587,8 @@ fi
 - modify init script to source /etc/sysconfig/sshd and pass $OPTIONS to sshd
   at startup (change merged from openssh.com init script, originally by
   Pekka Savola)
-- refuse to do X11 forwarding if xauth isn't there, handy if you enable
-  it by default on a system that doesn't have X installed
+- refuse to do X11 forwarding if xauth is not there, handy if you enable
+  it by default on a system that does not have X installed
 
 * Wed May  2 2001 Nalin Dahyabhai <nalin@redhat.com>
 - update to 2.9
@@ -599,10 +603,10 @@ fi
   races in condrestart
 
 * Mon Apr  2 2001 Nalin Dahyabhai <nalin@redhat.com>
-- mention that challengereponse supports PAM, so disabling password doesn't
+- mention that challengereponse supports PAM, so disabling password does not
   limit users to pubkey and rsa auth (#34378)
 - bypass the daemon() function in the init script and call initlog directly,
-  because daemon() won't start a daemon it detects is already running (like
+  because daemon() wo not start a daemon it detects is already running (like
   open connections)
 - require the version of openssl we had when we were built
 
@@ -618,10 +622,10 @@ fi
 
 * Tue Mar 20 2001 Nalin Dahyabhai <nalin@redhat.com>
 - update to 2.5.2p1 (includes endianness fixes in the rijndael implementation)
-- don't enable challenge-response by default until we find a way to not
+- do not enable challenge-response by default until we find a way to not
   have too many userauth requests (we may make up to six pubkey and up to
   three password attempts as it is)
-- remove build dependency on rsh to match openssh.com's packages more closely
+- remove build dependency on rsh to match openssh.com packages more closely
 
 * Sat Mar  3 2001 Nalin Dahyabhai <nalin@redhat.com>
 - remove dependency on openssl -- would need to be too precise
@@ -654,17 +658,17 @@ fi
 * Fri Feb 16 2001 Nalin Dahyabhai <nalin@redhat.com>
 - Update for 2.5.0p1.
 - Use $RPM_OPT_FLAGS instead of -O when building gnome-ssh-askpass
-- Resync with parts of Damien Miller's openssh.spec from CVS, including
+- Resync with parts of Damien Miller openssh.spec from CVS, including
   update of x11 askpass to 1.2.0.
-- Only require openssl (don't prereq) because we generate keys in the init
+- Only require openssl (do not prereq) because we generate keys in the init
   script now.
 
 * Tue Feb 13 2001 Nalin Dahyabhai <nalin@redhat.com>
-- Don't open a PAM session until we've forked and become the user (#25690).
-- Apply Andrew Bartlett's patch for letting pam_authenticate() know which
+- Do not open a PAM session until we've forked and become the user (#25690).
+- Apply Andrew Bartlett patch for letting pam_authenticate() know which
   host the user is attempting a login from.
-- Resync with parts of Damien Miller's openssh.spec from CVS.
-- Don't expose KbdInt responses in debug messages (from CVS).
+- Resync with parts of Damien Miller openssh.spec from CVS.
+- Do not expose KbdInt responses in debug messages (from CVS).
 - Detect and handle errors in rsa_{public,private}_decrypt (from CVS).
 
 * Wed Feb  7 2001 Trond Eivind Glomsrxd <teg@redhat.com>
@@ -687,16 +691,16 @@ fi
 - Incorporate a switch for using PAM configs for 6.x, just in case.
 
 * Tue Dec  5 2000 Nalin Dahyabhai <nalin@redhat.com>
-- Incorporate Bero's changes for a build specifically for rescue CDs.
+- Incorporate Bero changes for a build specifically for rescue CDs.
 
 * Wed Nov 29 2000 Nalin Dahyabhai <nalin@redhat.com>
-- Don't treat pam_setcred() failure as fatal unless pam_authenticate() has
+- Do not treat pam_setcred() failure as fatal unless pam_authenticate() has
   succeeded, to allow public-key authentication after a failure with "none"
   authentication.  (#21268)
 
 * Tue Nov 28 2000 Nalin Dahyabhai <nalin@redhat.com>
 - Update to x11-askpass 1.1.1. (#21301)
-- Don't second-guess fixpaths, which causes paths to get fixed twice. (#21290)
+- Do not second-guess fixpaths, which causes paths to get fixed twice. (#21290)
 
 * Mon Nov 27 2000 Nalin Dahyabhai <nalin@redhat.com>
 - Merge multiple PAM text messages into subsequent prompts when possible when
@@ -716,10 +720,10 @@ fi
 * Mon Nov 20 2000 Nalin Dahyabhai <nalin@redhat.com>
 - Add the primes file from the latest snapshot to the main package (#20884).
 - Add the dev package to the prereq list (#19984).
-- Remove the default path and mimic login's behavior in the server itself.
+- Remove the default path and mimic login behavior in the server itself.
 
 * Fri Nov 17 2000 Nalin Dahyabhai <nalin@redhat.com>
-- Resync with conditional options in Damien Miller's .spec file for an errata.
+- Resync with conditional options in Damien Miller .spec file for an errata.
 - Change libexecdir from %%{_libexecdir}/ssh to %%{_libexecdir}/openssh.
 
 * Tue Nov  7 2000 Nalin Dahyabhai <nalin@redhat.com>
@@ -750,7 +754,7 @@ fi
 - Set the default path to be the same as the one supplied by /bin/login, but
   add /usr/X11R6/bin. (#17909)
 - Try to handle obsoletion of ssh-server more cleanly.  Package names
-  are different, but init script name isn't. (#17865)
+  are different, but init script name is not. (#17865)
 
 * Wed Sep  6 2000 Nalin Dahyabhai <nalin@redhat.com>
 - Update to 2.2.0p1. (#17835)
@@ -764,7 +768,7 @@ fi
 * Mon Jul 17 2000 Nalin Dahyabhai <nalin@redhat.com>
 - Update to 2.1.1p4, which includes fixes for config file parsing problems.
 - Move the init script back.
-- Add Damien's quick fix for wackiness.
+- Add Damien quick fix for wackiness.
 
 * Wed Jul 12 2000 Nalin Dahyabhai <nalin@redhat.com>
 - Update to 2.1.1p3, which includes fixes for X11 forwarding and strtok().
@@ -806,7 +810,7 @@ fi
 - Updated for new gnome-ssh-askpass build
 
 * Sun Dec 26 1999 Damien Miller <djm@mindrot.org>
-- Added Jim Knoble's <jmknoble@pobox.com> askpass
+- Added Jim Knoble <jmknoble@pobox.com> askpass
 
 * Mon Nov 15 1999 Damien Miller <djm@mindrot.org>
 - Split subpackages further based on patch from jim knoble <jmknoble@pobox.com>
@@ -833,4 +837,4 @@ fi
 - New binary names
 
 * Wed Oct 27 1999 Damien Miller <djm@ibs.com.au>
-- Initial RPMification, based on Jan "Yenya" Kasprzak's <kas@fi.muni.cz> spec.
+- Initial RPMification, based on Jan "Yenya" Kasprzak <kas@fi.muni.cz> spec.
